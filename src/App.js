@@ -20,7 +20,8 @@ class App extends Component {
         { name: newName, age: 33 },
         { name: "Batman", age: 41 },
         { name: "Superman", age: 28 }
-      ]
+      ],
+      showPersons: false
     });
   };
 
@@ -34,6 +35,13 @@ class App extends Component {
     });
   };
 
+  togglePersonsHandler = () => {
+    const doesShow = this.state.showPersons;
+    this.setState({
+      showPersons: !doesShow
+    });
+  };
+
   render() {
     const style = {
       backgroundColor: "white",
@@ -42,36 +50,46 @@ class App extends Component {
       border: "1px solid blue",
       padding: "8px"
     };
+
+    let persons = null;
+
+    if (this.state.showPersons) {
+      persons = (
+        <div>
+          <Person
+            name={this.state.persons[0].name}
+            age={this.state.persons[0].age}
+          />
+          <Person
+            name={this.state.persons[1].name}
+            age={this.state.persons[1].age}
+            // Second way of transferring:
+            click={this.switchNameHandler.bind(this, "Speedster")}
+            changed={this.nameChangedHander}
+          >
+            Alter Ego: The Batman
+          </Person>
+          <Person
+            name={this.state.persons[2].name}
+            age={this.state.persons[2].age}
+          />
+        </div>
+      );
+    }
     return (
       <div className="App">
         <h1>Hi, I'm a React App</h1>
         <p>This is really working!</p>
         <button
           // First way of transfering info(is via binding is using ES6 function):
-          onClick={() => this.switchNameHandler("The Flash")}
+          onClick={this.togglePersonsHandler}
           // Take note that this method is less affective than the second one.
           // Section 3, Lecture 45.
           style={style}
         >
           Switch Name
         </button>
-        <Person
-          name={this.state.persons[0].name}
-          age={this.state.persons[0].age}
-        />
-        <Person
-          name={this.state.persons[1].name}
-          age={this.state.persons[1].age}
-          // Second way of transferring:
-          click={this.switchNameHandler.bind(this, "Speedster")}
-          changed={this.nameChangedHander}
-        >
-          Alter Ego: The Batman
-        </Person>
-        <Person
-          name={this.state.persons[2].name}
-          age={this.state.persons[2].age}
-        />
+        {persons}
       </div>
     );
   }
